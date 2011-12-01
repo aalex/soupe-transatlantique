@@ -2,9 +2,9 @@
 # IP:
 SAT_AUDIO = "206.167.169.239"
 SAT_TOONLOOP = "206.167.169.238"
-SAT_VIDEO = "206.167.169.238" # FIXME
+SAT_VIDEO = "206.167.169.238" # FIXME 237
 NUMEDIART_AUDIO = "193.190.210.24" # dynamic!
-NUMEDIART_VIDEO = "192.190.210.20" # dynamic!
+NUMEDIART_VIDEO = "193.190.210.10" # dynamic!
 NUMEDIART_USER = "numediart"
 SAT_USER = "scenic"
 
@@ -80,8 +80,8 @@ _video_from_sat_2 = {
     }
 
 def _add_video_streamers(_add_command, config):
-    _add_command("milhouse --sender --videosource v42lsrc --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"])
-    _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], env={"DISPLAY": config["video_display"]})
+    _add_command("milhouse --sender --videosource v42lsrc --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"])
+    _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], user=config["receiver_user"], env={"DISPLAY": config["video_display"]})
 
 _add_video_streamers(add_command, _video_from_mons_0)
 #_add_video_streamers(add_command, _video_from_sat_0)
@@ -111,8 +111,8 @@ _audio_from_mons = {
     }
 
 def _add_audio_streamers(_add_command, config):
-    _add_command("milhouse --sender --audiosource jackaudiosrc --address {host_receiver} --audiocodec raw --audioport {audio_port}".format(** config), identifier=config["sender_id"], host=config["host_sender"])
-    _add_command("milhouse --receiver --address {host_sender} --audiosink jackaudiosink --audioport {audio_port}".format(** config), identifier=config["receiver_id"], host=config["host_receiver"])
+    _add_command("milhouse --sender --audiosource jackaudiosrc --address {receiver_host} --audiocodec raw --audioport {audio_port}".format(** config), identifier=config["sender_id"], host=config["sender_host"])
+    _add_command("milhouse --receiver --address {sender_host} --audiosink jackaudiosink --audioport {audio_port}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"])
 
 #_add_audio_streamers(add_command, _audio_from_sat)
 #_add_audio_streamers(add_command, _audio_from_mons)
