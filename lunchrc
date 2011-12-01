@@ -1,8 +1,4 @@
 #!/usr/bin/env lunch
-print(dir())
-
-_add_command = add_command
-
 # IP:
 SAT_AUDIO = "206.167.169.239"
 SAT_TOONLOOP = "206.167.169.238"
@@ -24,7 +20,7 @@ _video_from_mons_0 = {
     "video_width": "640",
     "video_height": "480",
     "video_device": "/dev/video0",
-    "video_display": ":0.1",
+    "video_display": ":0.0",
     "fullscreen": "--fullscreen",
     "video_port": "10000",
     }
@@ -83,14 +79,14 @@ _video_from_sat_2 = {
     "fullscreen": "",
     }
 
-def _add_video_streamers(config):
-    _add_command("milhouse --sender --videosource v42lsrc --videodevice {video_device} --address {host_receiver} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["host_sender"])
-    _add_command("milhouse --receiver --address {host_sender} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen}".format(** config), identifier=config["receiver_id"], host=config["host_receiver"])
+def _add_video_streamers(_add_command, config):
+    _add_command("milhouse --sender --videosource v42lsrc --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"])
+    _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], env={"DISPLAY": config["video_display"]})
 
-_add_video_streamers(_video_from_mons_0)
-#_add_video_streamers(_video_from_sat_0)
-#_add_video_streamers(_video_from_sat_1)
-#_add_video_streamers(_video_from_sat_2)
+_add_video_streamers(add_command, _video_from_mons_0)
+#_add_video_streamers(add_command, _video_from_sat_0)
+#_add_video_streamers(add_command, _video_from_sat_1)
+#_add_video_streamers(add_command, _video_from_sat_2)
 
 # audio from SAT
 _audio_from_sat = {
@@ -114,9 +110,9 @@ _audio_from_mons = {
     "audio_port": "11010",
     }
 
-def _add_audio_streamers(config):
+def _add_audio_streamers(_add_command, config):
     _add_command("milhouse --sender --audiosource jackaudiosrc --address {host_receiver} --audiocodec raw --audioport {audio_port}".format(** config), identifier=config["sender_id"], host=config["host_sender"])
     _add_command("milhouse --receiver --address {host_sender} --audiosink jackaudiosink --audioport {audio_port}".format(** config), identifier=config["receiver_id"], host=config["host_receiver"])
 
-#_add_audio_streamers(_audio_from_sat)
-#_add_audio_streamers(_audio_from_mons)
+#_add_audio_streamers(add_command, _audio_from_sat)
+#_add_audio_streamers(add_command, _audio_from_mons)
