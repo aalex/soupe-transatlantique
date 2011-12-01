@@ -2,11 +2,13 @@
 # IP:
 SAT_AUDIO = "206.167.169.239"
 SAT_TOONLOOP = "206.167.169.238"
-SAT_VIDEO = "206.167.169.238" # FIXME 237
-NUMEDIART_AUDIO = "193.190.210.24" # dynamic!
+# SAT_VIDEO = "206.167.169.238" # FIXME 237
+NUMEDIART_AUDIO = "193.190.210.10" # dynamic!
 NUMEDIART_VIDEO = "193.190.210.10" # dynamic!
 NUMEDIART_USER = "numediart"
 SAT_USER = "scenic"
+
+add_local_address(SAT_AUDIO) # from which computer lunch master runs
 
 _video_from_mons_0 = {
     "sender_host": NUMEDIART_VIDEO,
@@ -15,32 +17,34 @@ _video_from_mons_0 = {
     "receiver_user": SAT_USER,
     "sender_id": "mons_send_video_0",
     "receiver_id": "sat_recv_video_0",
-    "video_codec": "mpeg4",
-    "video_bitrate": "3000000",
+    "video_codec": "h.263",
+    "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
     "video_device": "/dev/video0",
     "video_display": ":0.0",
     "fullscreen": "--fullscreen",
     "video_port": "10000",
+    "window_title": "numediart0",
     }
 
 # webcam from SAT
 _video_from_sat_0 = {
-    "sender_host": SAT_VIDEO,
+    "sender_host": SAT_AUDIO, # le screencast de valerie
     "receiver_host": NUMEDIART_VIDEO,
     "sender_user": SAT_USER,
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_0",
     "receiver_id": "mons_recv_video_0",
-    "video_codec": "mpeg4",
-    "video_bitrate": "3000000",
+    "video_codec": "h.263",
+    "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "fullscreen": "",
     "video_port": "10010",
+    "window_title": "sat0",
     }
 
 # toonloop from SAT
@@ -51,14 +55,15 @@ _video_from_sat_1 = {
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_1",
     "receiver_id": "mons_recv_video_1",
-    "video_codec": "mpeg4",
-    "video_bitrate": "3000000",
+    "video_codec": "h.263",
+    "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "video_port": "10020",
     "fullscreen": "",
+    "window_title": "sat1",
     }
 
 # screencast valerie from SAT
@@ -69,34 +74,36 @@ _video_from_sat_2 = {
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_2",
     "receiver_id": "mons_recv_video_2",
-    "video_codec": "mpeg4",
-    "video_bitrate": "3000000",
+    "video_codec": "h.263",
+    "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "video_port": "10030",
     "fullscreen": "",
+    "window_title": "sat2",
     }
 
 def _add_video_streamers(_add_command, config):
-    _add_command("milhouse --sender --videosource v42lsrc --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"])
-    _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], user=config["receiver_user"], env={"DISPLAY": config["video_display"]})
+    _add_command("milhouse --sender --videosource v4l2src --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"], env={"DISPLAY": ":0.0"})
+    _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen} --window-title {window_title}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], user=config["receiver_user"], env={"DISPLAY": config["video_display"]})
 
 _add_video_streamers(add_command, _video_from_mons_0)
-#_add_video_streamers(add_command, _video_from_sat_0)
-#_add_video_streamers(add_command, _video_from_sat_1)
+_add_video_streamers(add_command, _video_from_sat_0)
+_add_video_streamers(add_command, _video_from_sat_1)
 #_add_video_streamers(add_command, _video_from_sat_2)
 
 # audio from SAT
 _audio_from_sat = {
     "sender_host": SAT_AUDIO,
-    "receiver_host": NUMEDIART_VIDEO,
+    "receiver_host": NUMEDIART_AUDIO,
     "sender_user": SAT_USER,
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_audio",
     "receiver_id": "mons_recv_audio",
     "audio_port": "11000",
+    "channels" : "4",
     }
 
 # audio from Mons
@@ -108,11 +115,13 @@ _audio_from_mons = {
     "sender_id": "mons_send_audio",
     "receiver_id": "sat_recv_audio",
     "audio_port": "11010",
+    "channels" : "3",
     }
 
 def _add_audio_streamers(_add_command, config):
-    _add_command("milhouse --sender --audiosource jackaudiosrc --address {receiver_host} --audiocodec raw --audioport {audio_port}".format(** config), identifier=config["sender_id"], host=config["sender_host"])
-    _add_command("milhouse --receiver --address {sender_host} --audiosink jackaudiosink --audioport {audio_port}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"])
+    _add_command("milhouse --sender --audiosource jackaudiosrc --jack-client-name milhouse_send --address {receiver_host} --audiocodec raw --audioport {audio_port} --numchannels {channels}".format(** config), identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"], env={"DISPLAY": ":0.0"})
+    _add_command("milhouse --receiver --address {sender_host} --audiosink jackaudiosink --jack-client-name milhouse_recv --audioport {audio_port} --numchannels {channels}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], user=config["receiver_user"], env={"DISPLAY": ":0.0"})
 
-#_add_audio_streamers(add_command, _audio_from_sat)
-#_add_audio_streamers(add_command, _audio_from_mons)
+_add_audio_streamers(add_command, _audio_from_sat)
+_add_audio_streamers(add_command, _audio_from_mons)
+
