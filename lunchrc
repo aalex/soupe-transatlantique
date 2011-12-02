@@ -17,11 +17,12 @@ _video_from_mons_0 = {
     "receiver_user": SAT_USER,
     "sender_id": "mons_send_video_0",
     "receiver_id": "sat_recv_video_0",
-    "video_codec": "h.263",
+    "video_codec": "mpeg4",
     "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
-    "video_device": "/dev/video0",
+    "video_source": "dv1394src",
+    "video_device": "Canon DM-XM2 DM-XM2 DM-XM2: GUID 0x340486679011",
     "video_display": ":0.0",
     "fullscreen": "--fullscreen",
     "video_port": "10000",
@@ -36,10 +37,11 @@ _video_from_sat_0 = {
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_0",
     "receiver_id": "mons_recv_video_0",
-    "video_codec": "h.263",
+    "video_codec": "mpeg4",
     "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
+    "video_source": "v4l2src",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "fullscreen": "",
@@ -55,10 +57,11 @@ _video_from_sat_1 = {
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_1",
     "receiver_id": "mons_recv_video_1",
-    "video_codec": "h.263",
+    "video_codec": "mpeg4",
     "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
+    "video_source": "v4l2src",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "video_port": "10020",
@@ -74,10 +77,11 @@ _video_from_sat_2 = {
     "receiver_user": NUMEDIART_USER,
     "sender_id": "sat_send_video_2",
     "receiver_id": "mons_recv_video_2",
-    "video_codec": "h.263",
+    "video_codec": "mpeg4",
     "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
+    "video_source": "v4l2src",
     "video_device": "/dev/video0",
     "video_display": ":0.1",
     "video_port": "10030",
@@ -86,7 +90,10 @@ _video_from_sat_2 = {
     }
 
 def _add_video_streamers(_add_command, config):
-    _add_command("milhouse --sender --videosource v4l2src --videodevice {video_device} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config), identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"], env={"DISPLAY": ":0.0"})
+    txt = "milhouse --sender --videosource {video_source} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config)
+    if config["video_source"] != "dv1394src":
+        txt += " --videodevice {video_device}".format(** config)
+    _add_command(txt, identifier=config["sender_id"], host=config["sender_host"], user=config["sender_user"], env={"DISPLAY": ":0.0"})
     _add_command("milhouse --receiver --address {sender_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate} {fullscreen} --window-title {window_title}".format(** config), identifier=config["receiver_id"], host=config["receiver_host"], user=config["receiver_user"], env={"DISPLAY": config["video_display"]})
 
 _add_video_streamers(add_command, _video_from_mons_0)
