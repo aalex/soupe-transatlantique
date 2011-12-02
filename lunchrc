@@ -29,7 +29,6 @@ _video_from_mons_0 = {
     "window_title": "numediart0",
     }
 
-# webcam from SAT
 _video_from_sat_0 = {
     "sender_host": SAT_AUDIO, # le screencast de valerie
     "receiver_host": NUMEDIART_VIDEO,
@@ -49,9 +48,8 @@ _video_from_sat_0 = {
     "window_title": "sat0",
     }
 
-# toonloop from SAT
 _video_from_sat_1 = {
-    "sender_host": SAT_TOONLOOP,
+    "sender_host": SAT_AUDIO,
     "receiver_host": NUMEDIART_VIDEO,
     "sender_user": SAT_USER,
     "receiver_user": NUMEDIART_USER,
@@ -62,32 +60,31 @@ _video_from_sat_1 = {
     "video_width": "640",
     "video_height": "480",
     "video_source": "v4l2src",
-    "video_device": "/dev/video0",
+    "video_device": "/dev/video2",
     "video_display": ":0.1",
     "video_port": "10020",
     "fullscreen": "",
     "window_title": "sat1",
     }
 
-# screencast valerie from SAT
-_video_from_sat_2 = {
-    "sender_host": SAT_AUDIO,
-    "receiver_host": NUMEDIART_VIDEO,
-    "sender_user": SAT_USER,
-    "receiver_user": NUMEDIART_USER,
-    "sender_id": "sat_send_video_2",
-    "receiver_id": "mons_recv_video_2",
-    "video_codec": "mpeg4",
-    "video_bitrate": "2500000",
-    "video_width": "640",
-    "video_height": "480",
-    "video_source": "v4l2src",
-    "video_device": "/dev/video0",
-    "video_display": ":0.1",
-    "video_port": "10030",
-    "fullscreen": "",
-    "window_title": "sat2",
-    }
+# _video_from_sat_2 = {
+#     "sender_host": SAT_AUDIO,
+#     "receiver_host": NUMEDIART_VIDEO,
+#     "sender_user": SAT_USER,
+#     "receiver_user": NUMEDIART_USER,
+#     "sender_id": "sat_send_video_2",
+#     "receiver_id": "mons_recv_video_2",
+#     "video_codec": "mpeg4",
+#     "video_bitrate": "2500000",
+#     "video_width": "640",
+#     "video_height": "480",
+#     "video_source": "v4l2src",
+#     "video_device": "/dev/video0",
+#     "video_display": ":0.1",
+#     "video_port": "10030",
+#     "fullscreen": "",
+#     "window_title": "sat2",
+#     }
 
 def _add_video_streamers(_add_command, config):
     txt = "milhouse --sender --videosource {video_source} --address {receiver_host} --videocodec {video_codec} --videoport {video_port} --videobitrate {video_bitrate}".format(** config)
