@@ -1,7 +1,7 @@
 #!/usr/bin/env lunch
 # IP:
 SAT_AUDIO = "206.167.169.239"
-SAT_TOONLOOP = "206.167.169.238"
+# SAT_TOONLOOP = "206.167.169.238"
 # SAT_VIDEO = "206.167.169.238" # FIXME 237
 NUMEDIART_AUDIO = "193.190.210.10" # dynamic!
 NUMEDIART_VIDEO = "193.190.210.10" # dynamic!
@@ -22,7 +22,7 @@ _video_from_mons_0 = {
     "video_width": "640",
     "video_height": "480",
     "video_source": "dv1394src",
-    "video_device": "Canon DM-XM2 DM-XM2 DM-XM2: GUID 0x340486679011",
+#    "video_device": "Canon DM-XM2 DM-XM2 DM-XM2: GUID 0x340486679011", # oublie pas les guillemets. Pas besoin de cette ligne now.
     "video_display": ":0.0",
     "fullscreen": "--fullscreen",
     "video_port": "10000",
@@ -60,7 +60,7 @@ _video_from_sat_1 = {
     "video_width": "640",
     "video_height": "480",
     "video_source": "v4l2src",
-    "video_device": "/dev/video2",
+    "video_device": "/dev/video1",
     "video_display": ":0.1",
     "video_port": "10020",
     "fullscreen": "",
