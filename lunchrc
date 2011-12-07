@@ -10,6 +10,9 @@ SAT_USER = "scenic"
 
 add_local_address(SAT_AUDIO) # from which computer lunch master runs
 
+
+add_command("milhouse --v4l2-input 0", respawn=False, identifier="v4l2-input")
+
 _video_from_mons_0 = {
     "sender_host": NUMEDIART_VIDEO,
     "receiver_host": SAT_AUDIO,
@@ -21,7 +24,10 @@ _video_from_mons_0 = {
     "video_bitrate": "2500000",
     "video_width": "640",
     "video_height": "480",
-    "video_source": "dv1394src",
+    "video_source": "v4l2src",
+    "video_device": "/dev/video1",
+    
+#    "video_source": "dv1394src",
 #    "video_device": "Canon DM-XM2 DM-XM2 DM-XM2: GUID 0x340486679011", # oublie pas les guillemets. Pas besoin de cette ligne now.
     "video_display": ":0.0",
     "fullscreen": "--fullscreen",
